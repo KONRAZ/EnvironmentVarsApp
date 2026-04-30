@@ -1,6 +1,5 @@
 <Solution>
   <Project Path="EnvironmentVarsApp.Application/EnvironmentVarsApp.Application.csproj" />
-  <Project Path="EnvironmentVarsApp.Domain/EnvironmentVarsApp.Domain.csproj" />
   <Project Path="EnvironmentVarsApp.Infrastructure/EnvironmentVarsApp.Infrastructure.csproj" />
   <Project Path="EnvironmentVarsApp.Tests/EnvironmentVarsApp.Tests.csproj" />
   <Project Path="EnvironmentVarsApp/EnvironmentVarsApp.csproj" />
