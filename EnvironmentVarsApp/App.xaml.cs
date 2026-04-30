@@ -8,14 +8,14 @@ namespace EnvironmentVarsApp;
 /// <summary>
 /// Interaction logic for App.xaml
 /// </summary>
-public partial class App : System.Windows.Application
+public partial class App
 {
     private IHost? _host;
 
     protected override void OnStartup(StartupEventArgs e)
     {
         // Подписываемся на необработанные исключения
-        this.DispatcherUnhandledException += OnDispatcherUnhandledException;
+        DispatcherUnhandledException += OnDispatcherUnhandledException;
 
         // Создаем конфигурацию
         var configuration = ServiceCollectionExtensions.CreateConfiguration();

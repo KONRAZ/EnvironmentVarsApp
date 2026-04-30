@@ -18,7 +18,7 @@ public static class ServiceCollectionExtensions
     public static IServiceCollection ConfigureApplicationServices(this IServiceCollection services, IConfiguration configuration)
     {
         // Configuration
-        services.AddSingleton<IConfiguration>(configuration);
+        services.AddSingleton(configuration);
         services.AddSingleton<IConfigurationService, ConfigurationService>();
 
         // Logging
