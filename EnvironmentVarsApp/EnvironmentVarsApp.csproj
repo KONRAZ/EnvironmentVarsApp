@@ -2,6 +2,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\EnvironmentVarsApp.Application\EnvironmentVarsApp.Application.csproj" />
+    <ProjectReference Include="..\EnvironmentVarsApp.Infrastructure\EnvironmentVarsApp.Infrastructure.csproj" />
   </ItemGroup>
 
   <ItemGroup>

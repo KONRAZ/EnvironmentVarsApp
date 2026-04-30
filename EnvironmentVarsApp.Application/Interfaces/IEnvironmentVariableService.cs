@@ -21,4 +21,9 @@ public interface IEnvironmentVariableService
     /// Установить значение переменной
     /// </summary>
     Task SetEnvironmentVariableAsync(EnvironmentVariable variable);
+
+    /// <summary>
+    /// Удалить переменную
+    /// </summary>
+    Task DeleteEnvironmentVariableAsync(string name);
 }
