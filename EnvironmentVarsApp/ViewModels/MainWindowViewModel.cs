@@ -16,10 +16,13 @@ public partial class MainWindowViewModel : ObservableObject
     [ObservableProperty]
     private ObservableCollection<EnvironmentVariable> _environmentVariables = new();
 
+    [ObservableProperty]
+    private EnvironmentVariable? _selectedVariable;
+
     public MainWindowViewModel()
     {
         _managerService = App.GetService<IEnvironmentVariableManagerService>();
-        LoadVariablesAsync();
+        _ = LoadVariablesAsync();
     }
 
     /// <summary>
@@ -44,18 +47,31 @@ public partial class MainWindowViewModel : ObservableObject
     }
 
     /// <summary>
-    /// Сохранить переменную
+    /// Сохранить все переменные
     /// </summary>
     [RelayCommand]
-    private async Task SaveVariableAsync(EnvironmentVariable variable)
+    private async Task SaveAllVariablesAsync()
     {
+        if (EnvironmentVariables == null || EnvironmentVariables.Count == 0)
+        {
+            throw new InvalidOperationException("Нет переменных для сохранения");
+        }
+
         try
         {
-            await _managerService.SaveVariableAsync(variable);
+            // Принудительно обновляем все привязки перед сохранением
+            foreach (var variable in EnvironmentVariables)
+            {
+                if (string.IsNullOrWhiteSpace(variable.Value))
+                {
+                    continue;
+                }
+                await _managerService.SaveVariableAsync(variable);
+            }
         }
         catch (Exception ex)
         {
-            throw new InvalidOperationException($"Ошибка при сохранении переменной: {ex.Message}", ex);
+            throw new InvalidOperationException($"Ошибка при сохранении переменных: {ex.Message}", ex);
         }
     }
 
@@ -63,16 +79,22 @@ public partial class MainWindowViewModel : ObservableObject
     /// Удалить переменную
     /// </summary>
     [RelayCommand]
-    private async Task DeleteVariableAsync(EnvironmentVariable variable)
+    private async Task DeleteVariableAsync()
     {
+        if (SelectedVariable == null)
+        {
+            throw new InvalidOperationException("Не выбрана переменная для очистки");
+        }
+
         try
         {
-            await _managerService.DeleteVariableAsync(variable.Name);
-            EnvironmentVariables.Remove(variable);
+            await _managerService.DeleteVariableAsync(SelectedVariable.Name);
+            SelectedVariable.Value = string.Empty;
+            SelectedVariable.Comment = string.Empty;
         }
         catch (Exception ex)
         {
-            throw new InvalidOperationException($"Ошибка при удалении переменной: {ex.Message}", ex);
+            throw new InvalidOperationException($"Ошибка при очистке переменной: {ex.Message}", ex);
         }
     }
 

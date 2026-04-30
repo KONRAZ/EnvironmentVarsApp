@@ -176,3 +176,6 @@ logs/
 # Serilog log files
 test-sms-wpf-app-*.log
 *.log
+
+# Comments storage
+comments.json

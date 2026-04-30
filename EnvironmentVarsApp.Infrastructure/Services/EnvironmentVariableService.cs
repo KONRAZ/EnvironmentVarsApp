@@ -9,14 +9,17 @@ namespace EnvironmentVarsApp.Infrastructure.Services;
 public class EnvironmentVariableService : IEnvironmentVariableService
 {
     private readonly ILoggingService _loggingService;
+    private readonly ICommentService _commentService;
 
     /// <summary>
     /// .ctor
     /// </summary>
     /// <param name="loggingService"></param>
-    public EnvironmentVariableService(ILoggingService loggingService)
+    /// <param name="commentService"></param>
+    public EnvironmentVariableService(ILoggingService loggingService, ICommentService commentService)
     {
         _loggingService = loggingService;
+        _commentService = commentService;
     }
 
     /// <inheritdoc/>
@@ -40,8 +43,9 @@ public class EnvironmentVariableService : IEnvironmentVariableService
     public async Task<EnvironmentVariable?> GetEnvironmentVariableAsync(string name)
     {
         var value = Environment.GetEnvironmentVariable(name, EnvironmentVariableTarget.Machine);
+        var comment = await _commentService.GetCommentAsync(name);
         
-        var variable = new EnvironmentVariable(name, value ?? string.Empty);
+        var variable = new EnvironmentVariable(name, value ?? string.Empty, comment);
         
         await _loggingService.LogEnvironmentVariableOperationAsync("Read", name, null, value);
         
@@ -51,9 +55,16 @@ public class EnvironmentVariableService : IEnvironmentVariableService
     /// <inheritdoc/>
     public async Task SetEnvironmentVariableAsync(EnvironmentVariable variable)
     {
+        if (string.IsNullOrWhiteSpace(variable.Value))
+        {
+            return; // Не сохраняем переменные без значений
+        }
+
         var oldValue = Environment.GetEnvironmentVariable(variable.Name, EnvironmentVariableTarget.Machine);
         
         Environment.SetEnvironmentVariable(variable.Name, variable.Value, EnvironmentVariableTarget.Machine);
+        
+        await _commentService.SetCommentAsync(variable.Name, variable.Comment);
         
         await _loggingService.LogEnvironmentVariableOperationAsync("Write", variable.Name, oldValue, variable.Value);
     }
@@ -64,6 +75,8 @@ public class EnvironmentVariableService : IEnvironmentVariableService
         var oldValue = Environment.GetEnvironmentVariable(name, EnvironmentVariableTarget.Machine);
         
         Environment.SetEnvironmentVariable(name, null, EnvironmentVariableTarget.Machine);
+        
+        await _commentService.DeleteCommentAsync(name);
         
         await _loggingService.LogEnvironmentVariableOperationAsync("Delete", name, oldValue, null);
     }

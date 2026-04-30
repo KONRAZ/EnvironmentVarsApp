@@ -1,9 +1,11 @@
+using CommunityToolkit.Mvvm.ComponentModel;
+
 namespace EnvironmentVarsApp.Application.Models;
 
 /// <summary>
 /// Переменная среды
 /// </summary>
-public class EnvironmentVariable
+public partial class EnvironmentVariable : ObservableObject
 {
     /// <summary>
     /// Имя переменной
@@ -13,12 +15,14 @@ public class EnvironmentVariable
     /// <summary>
     /// Значение переменной
     /// </summary>
-    public string Value { get; set; } = string.Empty;
+    [ObservableProperty]
+    private string _value = string.Empty;
 
     /// <summary>
     /// Комментарий
     /// </summary>
-    public string Comment { get; set; } = string.Empty;
+    [ObservableProperty]
+    private string _comment = string.Empty;
 
     public EnvironmentVariable() { }
 
@@ -29,6 +33,7 @@ public class EnvironmentVariable
         Comment = comment ?? string.Empty;
     }
 
+    
     public override string ToString()
     {
         return $"{Name} = {Value}";

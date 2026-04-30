@@ -1,4 +1,3 @@
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using EnvironmentVarsApp.Extensions;
@@ -9,12 +8,15 @@ namespace EnvironmentVarsApp;
 /// <summary>
 /// Interaction logic for App.xaml
 /// </summary>
-public partial class App : Application
+public partial class App : System.Windows.Application
 {
     private IHost? _host;
 
     protected override void OnStartup(StartupEventArgs e)
     {
+        // Подписываемся на необработанные исключения
+        this.DispatcherUnhandledException += OnDispatcherUnhandledException;
+
         // Создаем конфигурацию
         var configuration = ServiceCollectionExtensions.CreateConfiguration();
 
@@ -27,6 +29,19 @@ public partial class App : Application
             .Build();
 
         base.OnStartup(e);
+    }
+
+    /// <summary>
+    /// Обработка необработанных исключений в UI потоке
+    /// </summary>
+    private void OnDispatcherUnhandledException(object sender, System.Windows.Threading.DispatcherUnhandledExceptionEventArgs e)
+    {
+        var errorMessage = e.Exception.Message;
+        
+        MessageBox.Show($"Произошла ошибка: {errorMessage}", "Ошибка", 
+            MessageBoxButton.OK, MessageBoxImage.Error);
+        
+        e.Handled = true; // Предотвращаем падение приложения
     }
 
     protected override void OnExit(ExitEventArgs e)

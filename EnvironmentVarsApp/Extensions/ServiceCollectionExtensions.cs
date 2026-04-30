@@ -4,7 +4,6 @@ using EnvironmentVarsApp.Infrastructure.Logging;
 using EnvironmentVarsApp.Infrastructure.Services;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
 
 namespace EnvironmentVarsApp.Extensions;
 
@@ -24,6 +23,9 @@ public static class ServiceCollectionExtensions
 
         // Logging
         services.AddSingleton<ILoggingService, LoggingService>();
+
+        // Comments
+        services.AddSingleton<ICommentService, CommentService>();
 
         // Environment Variables
         services.AddSingleton<IEnvironmentVariableService, EnvironmentVariableService>();

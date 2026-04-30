@@ -1,7 +1,6 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <ItemGroup>
-    <ProjectReference Include="..\EnvironmentVarsApp.Domain\EnvironmentVarsApp.Domain.csproj" />
     <ProjectReference Include="..\EnvironmentVarsApp.Application\EnvironmentVarsApp.Application.csproj" />
   </ItemGroup>
 
